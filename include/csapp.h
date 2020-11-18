@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-16 21:39:34
- * @LastEditTime: 2020-11-17 23:45:56
+ * @LastEditTime: 2020-11-18 22:16:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \git_proj\csapp\include\csapp.h
@@ -12,22 +12,23 @@
 #include <cstdlib>
 #include <cstring>
 #include <netdb.h>
-#include <sys/stat.h> 
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/wait.h>
-#include <unistd.h> 
+#include <unistd.h>
 
 void unix_error(char *msg);
 void gai_error(int code, char *msg);
-void app_error(char *msg);
+void app_error(const char *msg);
 
 #define RIO_BUFSIZE 8192
-#define MAXLINE     1024
-#define LISTENQ  1024  //指定未完成连接队列的最大长度.如果一个连接请求到达时未完成连接队列已满,那么客户端将接收到错误
-#define MAXBUF   8192  //IO buffer的最大值
+#define MAXLINE 1024
+#define LISTENQ 1024 //指定未完成连接队列的最大长度.如果一个连接请求到达时未完成连接队列已满,那么客户端将接收到错误
+#define MAXBUF 8192  //IO buffer的最大值
 
-typedef struct {
+typedef struct
+{
     int rio_fd;                //文件描述符
     int rio_cnt;               //未读字节数
     char *rio_bufptr;          //下一个未读字节
@@ -35,21 +36,21 @@ typedef struct {
 } rio_t;
 ssize_t rio_readn(int fd, void *usrbuf, size_t n);
 ssize_t rio_writen(int fd, void *usrbuf, size_t n);
-void rio_readinitb(rio_t *rp, int fd); 
-ssize_t	rio_readnb(rio_t *rp, void *usrbuf, size_t n);
-ssize_t	rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
+void rio_readinitb(rio_t *rp, int fd);
+ssize_t rio_readnb(rio_t *rp, void *usrbuf, size_t n);
+ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
 
 ssize_t Rio_readn(int fd, void *usrbuf, size_t n);
 void Rio_writen(int fd, void *usrbuf, size_t n);
-void Rio_readinitb(rio_t *rp, int fd); 
+void Rio_readinitb(rio_t *rp, int fd);
 ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n);
 ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
 
 typedef struct sockaddr SA;
 int Accept(int s, struct sockaddr *addr, socklen_t *addrlen);
-void Getaddrinfo(const char *node, const char *service, 
+void Getaddrinfo(const char *node, const char *service,
                  const struct addrinfo *hints, struct addrinfo **res);
-void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, 
+void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host,
                  size_t hostlen, char *serv, size_t servlen, int flags);
 void Freeaddrinfo(struct addrinfo *res);
 int open_clientfd(char *hostname, char *port);
@@ -57,7 +58,7 @@ int Open_clientfd(char *hostname, char *port);
 int open_listenfd(char *port);
 int Open_listenfd(char *port);
 void Setsockopt(int s, int level, int optname, const void *optval, int optlen);
-
+int Select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 char *Fgets(char *ptr, int n, FILE *stream);
 FILE *Fopen(const char *filename, const char *mode);
 void Fputs(const char *ptr, FILE *stream);

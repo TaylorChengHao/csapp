@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-16 21:39:44
- * @LastEditTime: 2020-11-17 23:41:01
+ * @LastEditTime: 2020-11-18 22:15:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \git_proj\csapp\src\csapp.cpp
@@ -203,12 +203,12 @@ ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen)
     return rc;
 }
 
-int Accept(int s, struct sockaddr *addr, socklen_t *addrlen) 
+int Accept(int s, struct sockaddr *addr, socklen_t *addrlen)
 {
     int rc;
 
     if ((rc = accept(s, addr, addrlen)) < 0)
-	unix_error("Accept error");
+        unix_error("Accept error");
     return rc;
 }
 
@@ -226,13 +226,13 @@ void Getaddrinfo(const char *node, const char *service,
         gai_error(rc, "Getaddrinfo error");
 }
 
-void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, 
+void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host,
                  size_t hostlen, char *serv, size_t servlen, int flags)
 {
     int rc;
 
-    if ((rc = getnameinfo(sa, salen, host, hostlen, serv, 
-                          servlen, flags)) != 0) 
+    if ((rc = getnameinfo(sa, salen, host, hostlen, serv,
+                          servlen, flags)) != 0)
         gai_error(rc, "Getnameinfo error");
 }
 
@@ -316,12 +316,22 @@ int open_listenfd(char *port)
     return listenfd;
 }
 
-int Open_listenfd(char *port) 
+int Open_listenfd(char *port)
 {
     int rc;
 
     if ((rc = open_listenfd(port)) < 0)
-	unix_error("Open_listenfd error");
+        unix_error("Open_listenfd error");
+    return rc;
+}
+
+int Select(int n, fd_set *readfds, fd_set *writefds,
+           fd_set *exceptfds, struct timeval *timeout)
+{
+    int rc;
+
+    if ((rc = select(n, readfds, writefds, exceptfds, timeout)) < 0)
+        unix_error("Select error");
     return rc;
 }
 
@@ -351,12 +361,12 @@ void Fputs(const char *ptr, FILE *stream)
         unix_error("Fputs error");
 }
 
-int Open(const char *pathname, int flags, mode_t mode) 
+int Open(const char *pathname, int flags, mode_t mode)
 {
     int rc;
 
-    if ((rc = open(pathname, flags, mode))  < 0)
-	unix_error("Open error");
+    if ((rc = open(pathname, flags, mode)) < 0)
+        unix_error("Open error");
     return rc;
 }
 
@@ -368,58 +378,58 @@ void Close(int fd)
         unix_error("Close error");
 }
 
-void *Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset) 
+void *Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
     void *ptr;
 
-    if ((ptr = mmap(addr, len, prot, flags, fd, offset)) == ((void *) -1))
-	unix_error("mmap error");
-    return(ptr);
+    if ((ptr = mmap(addr, len, prot, flags, fd, offset)) == ((void *)-1))
+        unix_error("mmap error");
+    return (ptr);
 }
 
-void Munmap(void *start, size_t length) 
+void Munmap(void *start, size_t length)
 {
     if (munmap(start, length) < 0)
-	unix_error("munmap error");
+        unix_error("munmap error");
 }
 
-void Setsockopt(int s, int level, int optname, const void *optval, int optlen) 
+void Setsockopt(int s, int level, int optname, const void *optval, int optlen)
 {
     int rc;
 
     if ((rc = setsockopt(s, level, optname, optval, optlen)) < 0)
-	unix_error("Setsockopt error");
+        unix_error("Setsockopt error");
 }
 
-pid_t Fork(void) 
+pid_t Fork(void)
 {
     pid_t pid;
 
     if ((pid = fork()) < 0)
-	unix_error("Fork error");
+        unix_error("Fork error");
     return pid;
 }
 
-void Execve(const char *filename, char *const argv[], char *const envp[]) 
+void Execve(const char *filename, char *const argv[], char *const envp[])
 {
     if (execve(filename, argv, envp) < 0)
-	unix_error("Execve error");
+        unix_error("Execve error");
 }
 
-pid_t Wait(int *status) 
+pid_t Wait(int *status)
 {
     pid_t pid;
 
-    if ((pid  = wait(status)) < 0)
-	unix_error("Wait error");
+    if ((pid = wait(status)) < 0)
+        unix_error("Wait error");
     return pid;
 }
 
-int Dup2(int fd1, int fd2) 
+int Dup2(int fd1, int fd2)
 {
     int rc;
 
     if ((rc = dup2(fd1, fd2)) < 0)
-	unix_error("Dup2 error");
+        unix_error("Dup2 error");
     return rc;
 }
