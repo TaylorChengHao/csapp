@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 16:49:58
- * @LastEditTime: 2020-11-18 16:26:04
+ * @LastEditTime: 2020-11-19 18:18:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \git_proj\csapp\tiny_web\tiny.cpp
@@ -175,7 +175,7 @@ void server_static(int fd, char *filename, int filesize)
     sprintf(buf, "%sServer:Tiny WebServer\r\n", buf);
     sprintf(buf, "%sConnection:close\r\n", buf);
     sprintf(buf, "%sContent-length:%d\r\n", buf, filesize);
-    sprintf(buf, "%sContent-type:%s\r\n", buf, filetype);
+    sprintf(buf, "%sContent-type:%s\r\n\r\n", buf, filetype);
     Rio_writen(fd, buf, strlen(buf));
     printf("Response header:\n");
     printf("%s", buf);
