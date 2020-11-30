@@ -1,11 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2020-11-16 21:39:34
- * @LastEditTime: 2020-11-18 22:16:45
+ * @LastEditTime: 2020-11-30 21:44:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \git_proj\csapp\include\csapp.h
  */
+#ifndef __CSAPP_H__
+#define __CSAPP_H__
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <cstdio>
@@ -17,10 +20,13 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 void unix_error(char *msg);
 void gai_error(int code, char *msg);
 void app_error(const char *msg);
+void posix_error(int code, char *msg);
 
 #define RIO_BUFSIZE 8192
 #define MAXLINE 1024
@@ -45,6 +51,11 @@ void Rio_writen(int fd, void *usrbuf, size_t n);
 void Rio_readinitb(rio_t *rp, int fd);
 ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n);
 ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
+
+void *Malloc(size_t size);
+void *Realloc(void *ptr, size_t size);
+void *Calloc(size_t nmemb, size_t size);
+void Free(void *ptr);
 
 typedef struct sockaddr SA;
 int Accept(int s, struct sockaddr *addr, socklen_t *addrlen);
@@ -72,3 +83,14 @@ pid_t Fork(void);
 void Execve(const char *filename, char *const argv[], char *const envp[]);
 pid_t Wait(int *status);
 int Dup2(int fd1, int fd2);
+
+void Pthread_create(pthread_t *tidp, pthread_attr_t *attrp, 
+		    void * (*routine)(void *), void *argp);
+void Pthread_detach(pthread_t tid);
+void Pthread_once(pthread_once_t *once_control, void (*init_function)());
+
+void Sem_init(sem_t *sem, int pshared, unsigned int value);
+void P(sem_t *sem);
+void V(sem_t *sem);
+
+#endif

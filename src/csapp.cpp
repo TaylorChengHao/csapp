@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-16 21:39:44
- * @LastEditTime: 2020-11-18 22:15:00
+ * @LastEditTime: 2020-11-30 21:43:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \git_proj\csapp\src\csapp.cpp
@@ -28,6 +28,12 @@ void gai_error(int code, const char *msg) /* Getaddrinfo-style error */
 void app_error(const char *msg) /* Application error */
 {
     fprintf(stderr, "%s\n", msg);
+    exit(0);
+}
+
+void posix_error(int code, const char *msg) /* Posix-style error */
+{
+    fprintf(stderr, "%s: %s\n", msg, strerror(code));
     exit(0);
 }
 
@@ -202,6 +208,39 @@ ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen)
         unix_error("Rio_readlineb error");
     return rc;
 }
+
+void *Malloc(size_t size) 
+{
+    void *p;
+
+    if ((p  = malloc(size)) == NULL)
+	unix_error("Malloc error");
+    return p;
+}
+
+void *Realloc(void *ptr, size_t size) 
+{
+    void *p;
+
+    if ((p  = realloc(ptr, size)) == NULL)
+	unix_error("Realloc error");
+    return p;
+}
+
+void *Calloc(size_t nmemb, size_t size) 
+{
+    void *p;
+
+    if ((p = calloc(nmemb, size)) == NULL)
+	unix_error("Calloc error");
+    return p;
+}
+
+void Free(void *ptr) 
+{
+    free(ptr);
+}
+
 
 int Accept(int s, struct sockaddr *addr, socklen_t *addrlen)
 {
@@ -432,4 +471,42 @@ int Dup2(int fd1, int fd2)
     if ((rc = dup2(fd1, fd2)) < 0)
         unix_error("Dup2 error");
     return rc;
+}
+
+void Pthread_create(pthread_t *tidp, pthread_attr_t *attrp, 
+		    void * (*routine)(void *), void *argp) 
+{
+    int rc;
+
+    if ((rc = pthread_create(tidp, attrp, routine, argp)) != 0)
+	posix_error(rc, "Pthread_create error");
+}
+
+void Pthread_detach(pthread_t tid) {
+    int rc;
+
+    if ((rc = pthread_detach(tid)) != 0)
+	posix_error(rc, "Pthread_detach error");
+}
+
+void Pthread_once(pthread_once_t *once_control, void (*init_function)()) {
+    pthread_once(once_control, init_function);
+}
+
+void Sem_init(sem_t *sem, int pshared, unsigned int value) 
+{
+    if (sem_init(sem, pshared, value) < 0)
+	unix_error("Sem_init error");
+}
+
+void P(sem_t *sem) 
+{
+    if (sem_wait(sem) < 0)
+	unix_error("P error");
+}
+
+void V(sem_t *sem) 
+{
+    if (sem_post(sem) < 0)
+	unix_error("V error");
 }
